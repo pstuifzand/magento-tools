@@ -3,16 +3,16 @@ CXXFLAGS=-std=c++11
 
 .PHONY: all clean distclean
 
-all: mh
+all: magento-helper
 
-mh: magento-helpers.o
+magento-helper: magento-helpers.o
 	gcc $^ -o $@ $(LIBS)
 
 .cpp.o:
 	gcc -c $< -o $@ $(CXXFLAGS)
 
 distclean: clean
-	-rm ./mh
+	-rm ./magento-helper
 
 clean:
 	-rm magento-helpers.o

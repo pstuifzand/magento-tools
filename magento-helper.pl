@@ -2,7 +2,7 @@
 use strict;
 use feature "say";
 
-open my $in, '-|', "find /var/www/html/magento/app/code -name 'config.xml' | xargs /home/peter/work/magento-tools/mh"
+open my $in, '-|', "find ./app/code -name 'config.xml' | xargs magento-helper"
     or die "Can't open input process";
 
 my %helpers;
