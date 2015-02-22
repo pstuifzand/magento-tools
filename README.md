@@ -1,0 +1,29 @@
+# Magento Tools
+
+Tools for working with Magento in Vim.
+
+## The tools
+
+### magento-helper.pl
+
+Works with a small Vim script to opens the file that contains the Block, Model
+or Helper.
+
+Specfically it looks for getModel(...), getBlock(...) or helper(...) calls on
+the current line and calculates the location of the .php file from the
+config.xml files.
+
+### mh
+
+Short `config.xml` parser that lists Blocks, Helpers and Models.
+
+
+## Building
+
+Uses the `expat` library.
+
+Also uses C++11.
+
+Build using make.
+
+    `make`
