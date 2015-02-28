@@ -13,10 +13,13 @@ Specfically it looks for getModel(...), getBlock(...) or helper(...) calls on
 the current line and calculates the location of the .php file from the
 config.xml files.
 
-### mh
+### magento-helper
 
 Short `config.xml` parser that lists Blocks, Helpers and Models.
 
+### magento-modules
+
+List all modules in `app/etc/modules`.
 
 ## Building
 
@@ -26,7 +29,7 @@ Also uses C++11.
 
 Build using make.
 
-    `make`
+    make
 
 ## Vim
 
