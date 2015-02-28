@@ -2,6 +2,7 @@
 #include <cstring>
 #include <iostream>
 #include <fstream>
+#include "xml.hpp"
 
 enum class State {
     ERROR,
@@ -203,15 +204,15 @@ void character_data_handler(void* udata, const XML_Char* s, int len) {
     }
 }
 
-void parse_xml(XML_Parser parser, std::ifstream& in, user_data* data) {
+void parse_xml(xml_parser& parser, std::ifstream& in, user_data* data) {
     const int size = 1024;
     char buf[size];
     while (in) {
         in.read(buf, size);
-        XML_Status ret = XML_Parse(parser, buf, in.gcount(), in ? 0 : 1);
+        XML_Status ret = XML_Parse(parser.handle(), buf, in.gcount(), in ? 0 : 1);
         if (!ret) {
-            XML_Error error = XML_GetErrorCode(parser);
-            int line = XML_GetCurrentLineNumber(parser);
+            XML_Error error = XML_GetErrorCode(parser.handle());
+            int line = XML_GetCurrentLineNumber(parser.handle());
             std::cerr << data->filename << ":" << line << ": error: " << XML_ErrorString(error) << "\n";
             break;
         }
@@ -228,21 +229,21 @@ int main(int argc, char** argv)
     if (!argc) return 0;
 
     // create parser
-    XML_Parser parser = XML_ParserCreate(0);
+    xml_parser parser;
 
     while (argc) {
         user_data data = { State::WAIT_FOR_SECTION };
         data.filename = *argv;
 
-        XML_SetUserData(parser, &data);
-        XML_SetElementHandler(parser, root_start_element_handler, root_end_element_handler);
-        XML_SetCharacterDataHandler(parser, character_data_handler);
+        XML_SetUserData(parser.handle(), &data);
+        XML_SetElementHandler(parser.handle(), root_start_element_handler, root_end_element_handler);
+        XML_SetCharacterDataHandler(parser.handle(), character_data_handler);
 
         data.pool = find_code_pool(data.filename);
         if (data.pool != CodePool::ERROR) {
             std::ifstream in{data.filename};
             if (in) parse_xml(parser, in, &data);
-            XML_ParserReset(parser, 0);
+            parser.reset();
         } else {
             std::cout << "File skipped: " << data.filename << "\n";
         }
@@ -250,7 +251,5 @@ int main(int argc, char** argv)
         argc--;
         argv++;
     }
-
-    XML_ParserFree(parser);
 }
 

@@ -31,17 +31,17 @@ while (<>) {
     if (($uri, $func) = m{get(?:Model|Singleton)\('([\w/]+)'\)(?:->(\w+))?}) {
         $type = 'model';
         ($h, $c) = split '/', $uri;
-        ($class, $pool) = @{$models{$h}};
+        ($class, $pool) = @{$models{$h}||[]};
     }
     elsif (($uri) = m{getBlock\('([\w/]+)'\)}) {
         $type = 'block';
         ($h, $c) = split '/', $uri;
-        ($class, $pool) = @{$blocks{$h}};
+        ($class, $pool) = @{$blocks{$h}||[]};
     }
     elsif (($uri, $func) = m{helper\('([\w/]+)'\)(?:->(\w+))?}) {
         $type = 'helper';
         ($h, $c) = split '/', $uri;
-        ($class, $pool) = @{$helpers{$h}};
+        ($class, $pool) = @{$helpers{$h}||[]};
         $c //= 'data';
     }
     else {
@@ -52,6 +52,7 @@ while (<>) {
 
     if (!$fh) {
         $fh = 'Mage_' . ucfirst($h) . '_' . ucfirst($type);
+        $pool = 'core';
     }
 
     $c =~ s/_([a-z])/_\u$1/g;
