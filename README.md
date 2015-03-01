@@ -21,6 +21,10 @@ Short `config.xml` parser that lists Blocks, Helpers and Models.
 
 List all modules in `app/etc/modules`.
 
+### magento-config.pl files...
+
+Checks getStoreConfig() calls for existence in all 'system.xml' files.
+
 ## Building
 
 Uses the `expat` library.
