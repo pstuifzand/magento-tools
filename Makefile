@@ -1,9 +1,12 @@
 LIBS=-lstdc++ -lexpat
-CXXFLAGS=-std=c++11 -O2
+CXXFLAGS=-std=c++11 -O3 -mtune=native
 
 .PHONY: all clean distclean
 
-all: magento-helper magento-modules
+all: magento-helper magento-modules magento-config
+
+magento-config: magento-config.o
+	gcc $^ -o $@ $(LIBS)
 
 magento-helper: magento-helpers.o
 	gcc $^ -o $@ $(LIBS)
@@ -13,12 +16,15 @@ magento-modules: magento-modules.o
 
 .cpp.o:
 	gcc -c $< -o $@ $(CXXFLAGS)
-magento-modules.o: fs.hpp
+magento-modules.o: fs.hpp xml.hpp
+magento-config.o: fs.hpp xml.hpp
 
 distclean: clean
 	-rm ./magento-helper
+	-rm ./magento-config
 	-rm ./magento-modules
 
 clean:
 	-rm magento-helpers.o
 	-rm magento-modules.o
+	-rm magento-config.o

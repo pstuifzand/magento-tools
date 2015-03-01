@@ -31,14 +31,16 @@ const char* state_names[] = {
 };
 
 struct user_data {
+    State state;
+
     const char* filename;
     std::string current_name;
     std::string current_text;
-    State state;
+
     bool active;
     std::string codepool;
 
-    user_data() : state(State::ROOT) {}
+    user_data() : state(State::ROOT), filename(0), current_name(), current_text(), active(false), codepool("") {}
 };
 
 void root_start_element_handler(void* udata, const XML_Char* name, const XML_Char** atts) {
@@ -117,21 +119,6 @@ void character_data_handler(void* udata, const XML_Char* s, int len) {
     }
 }
 
-void parse_xml(xml_parser& parser, std::ifstream& in, user_data* data) {
-    const int size = 1024;
-    char buf[size];
-    while (in) {
-        in.read(buf, size);
-        XML_Status ret = XML_Parse(parser.handle(), buf, in.gcount(), in ? 0 : 1);
-        if (!ret) {
-            XML_Error error = XML_GetErrorCode(parser.handle());
-            int line = XML_GetCurrentLineNumber(parser.handle());
-            std::cerr << data->filename << ":" << line << ": error: " << XML_ErrorString(error) << "\n";
-            break;
-        }
-    }
-}
-
 struct parse_module_config {
     xml_parser parser;
     user_data  data;
@@ -154,19 +141,8 @@ struct parse_module_config {
     }
 };
 
-template <typename F>
-void for_all_files(fs::dir& d, F func) {
-    fs::file f;
-    while (next_file(d, f)) {
-        if (f.name()[0] == '.') continue;
-        func(f);
-    }
-}
-
-
 int main(int argc, char** argv) {
     fs::dir module_dir{"app/etc/modules"};
-
-    for_all_files(module_dir, parse_module_config());
+    fs::for_all_files(module_dir, parse_module_config());
 }
 

@@ -38,6 +38,15 @@ bool next_file(dir& d, file& f) {
     return !f.at_end();
 }
 
+template <typename F>
+void for_all_files(fs::dir& d, F func) {
+    fs::file f;
+    while (next_file(d, f)) {
+        if (f.name()[0] == '.') continue;
+        func(f);
+    }
+}
+
 }
 
 #endif

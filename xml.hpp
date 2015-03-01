@@ -19,4 +19,21 @@ class xml_parser {
         }
 };
 
+template <class T>
+void parse_xml(xml_parser& parser, std::ifstream& in, T* data) {
+    const int size = 1024;
+    char buf[size];
+    while (in) {
+        in.read(buf, size);
+        XML_Status ret = XML_Parse(parser.handle(), buf, in.gcount(), in ? 0 : 1);
+        if (!ret) {
+            XML_Error error = XML_GetErrorCode(parser.handle());
+            int line = XML_GetCurrentLineNumber(parser.handle());
+            std::cerr << data->filename << ":" << line << ": error: " << XML_ErrorString(error) << "\n";
+            break;
+        }
+    }
+}
+
+
 #endif
