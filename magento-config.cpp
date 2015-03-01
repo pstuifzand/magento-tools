@@ -139,12 +139,6 @@ struct parse_module_config {
         if (in) parse_xml(parser, in, &data);
         else std::cerr << "Can't open " << data.filename << "\n";
 
-        std::sort(std::begin(data.names), std::end(data.names));
-
-        for (auto& s : data.names) {
-            std::cout << s << "\n";
-        }
-        
         parser.reset();
     }
 };
@@ -159,6 +153,24 @@ int main(int argc, char** argv) {
         parse(*argv);
         argc--;
         argv++;
+    }
+
+    std::sort(std::begin(parse.data.names), std::end(parse.data.names));
+
+    std::string s;
+    while (std::getline(std::cin, s)) {
+        std::string key = s;
+
+        auto p = std::equal_range(
+            std::begin(parse.data.names),
+            std::end(parse.data.names),
+            key);
+
+        if (p.first == p.second) {
+            std::cout << "not found " << '"' << key << '"' << "\n";
+        } else {
+            std::cout << "found " << '"' << key << '"' << "\n";
+        }
     }
 }
 
