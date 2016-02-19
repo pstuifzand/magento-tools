@@ -11,6 +11,11 @@ my %helpers;
 my %models;
 my %blocks;
 
+my $find;
+if (($find) = $ARGV[0] =~ m/^--(\w+)$/) {
+    shift @ARGV;
+}
+
 while (<$in>) {
     chomp;
     my ($type, $name, $class, $pool) = m/^(\w+): \s+ (\w+) \s+ => \s+ (\w+) \s+ \((community|core|local)\)$/x;
@@ -50,6 +55,11 @@ while (<>) {
         ($h, $c) = split '/', $uri;
         ($class, $pool) = @{$helpers{$h}||[]};
         $c //= 'data';
+    }
+    elsif ($find) {
+        $type = $find;
+        ($h, $c) = split '/';
+        ($class, $pool) = @{$helpers{$h}||[]};
     }
     else {
         last;
