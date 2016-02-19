@@ -2,7 +2,9 @@
 use strict;
 use feature "say";
 
-open my $in, '-|', "find ./app/code -name 'config.xml' | xargs magento-helper"
+use FindBin '$Bin';
+
+open my $in, '-|', "find ./app/code -name 'config.xml' | xargs $FindBin::Bin/magento-helper"
     or die "Can't open input process";
 
 my %helpers;
@@ -28,12 +30,17 @@ while (<>) {
     my ($class, $pool);
     my ($h, $c);
 
-    if (($uri, $func) = m{get(?:Model|Singleton)\('([\w/]+)'\)(?:->(\w+))?}) {
+    if ((undef, $uri, $func) = m{get(?:Model|Singleton)\((["'])([^"']+)\1\)(?:->(\w+))?}) {
         $type = 'model';
         ($h, $c) = split '/', $uri;
         ($class, $pool) = @{$models{$h}||[]};
     }
-    elsif (($uri) = m{getBlock\('([\w/]+)'\)}) {
+    elsif ((undef,$uri) = m{getBlock\((["'])([^"']+)\1}) {
+        $type = 'block';
+        ($h, $c) = split '/', $uri;
+        ($class, $pool) = @{$blocks{$h}||[]};
+    }
+    elsif (m{<block\s+} && do { (undef, $uri) = m{type=(["'])([^"']+)\1}}) {
         $type = 'block';
         ($h, $c) = split '/', $uri;
         ($class, $pool) = @{$blocks{$h}||[]};
