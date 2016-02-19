@@ -10,6 +10,8 @@ struct user_data {
     char* filename;
     std::vector<std::string> stack;
     std::vector<std::string> atts;
+
+    std::string current;
 };
 
 struct string_view {
@@ -54,6 +56,21 @@ void print_stack(I p, I l)
     }
 }
 
+template <typename I>
+void print_atts(I f0, I l0, I f1, I l1)
+{
+    if (f1 != l1) {
+        while (f1 != l1) {
+            print_stack(f0, l0);
+            std::cout << "@" << *f1;
+            ++f1;
+            std::cout << "\t" << *f1;
+            ++f1;
+            std::cout << "\n";
+        }
+    }
+}
+
 void root_start_element_handler(void* udata, const XML_Char* name, const XML_Char** atts)
 {
     user_data* data = (user_data*)udata;
@@ -67,33 +84,28 @@ void root_start_element_handler(void* udata, const XML_Char* name, const XML_Cha
 void root_end_element_handler(void* udata, const XML_Char* name)
 {
     user_data* data = (user_data*)udata;
+
+    print_stack(data->stack.begin(), data->stack.end());
+    std::cout << "\t";
+    std::cout.write(data->current.data(), data->current.size());
+    std::cout << "\n";
+
+    print_atts(data->stack.begin(), data->stack.end(), data->atts.begin(), data->atts.end());
+
     data->stack.pop_back();
     data->atts.clear();
+    data->current.clear();
 }
 
 void character_data_handler(void* udata, const XML_Char* s, int len)
 {
     user_data* data = (user_data*)udata;
     std::string x = std::string(s,len);
-    auto trimmed = trim(x);
-    if (trimmed.size()) {
-        print_stack(data->stack.begin(), data->stack.end());
-        std::cout << "\t";
-        std::cout.write(trimmed.data(), trimmed.size());
-        std::cout << "\n";
-    }
 
-    auto p = data->atts.begin();
-    auto l = data->atts.end();
-    if (p != l) {
-        while (p != l) {
-            print_stack(data->stack.begin(), data->stack.end());
-            std::cout << "@" << *p;
-            ++p;
-            std::cout << "\t" << *p;
-            ++p;
-            std::cout << "\n";
-        }
+    auto trimmed = trim(x);
+
+    if (trimmed.size()) {
+        data->current.append(trimmed);
     }
 }
 
