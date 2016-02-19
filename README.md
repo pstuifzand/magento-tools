@@ -13,6 +13,36 @@ Specfically it looks for getModel(...), getBlock(...) or helper(...) calls on
 the current line and calculates the location of the .php file from the
 config.xml files.
 
+#### Useful .vimrc commands
+
+    function! TestMH()
+        let filename = systemlist("echo " . shellescape(getline('.')) . " | ~/bin/magento-helper.pl")
+        execute ":e " . filename[1]
+        execute "/" . filename[0]
+    endfunction
+
+    function! MModel(name)
+        let filename = systemlist("echo " . shellescape(a:name) . " | ~/bin/magento-helper.pl --model")
+        execute ":e " . filename[1]
+        execute "/" . filename[0]
+    endfunction
+
+    function! MBlock(name)
+        let filename = systemlist("echo " . shellescape(a:name) . " | ~/bin/magento-helper.pl --block")
+        execute ":e " . filename[1]
+        execute "/" . filename[0]
+    endfunction
+
+    function! MHelper(name)
+        let filename = systemlist("echo " . shellescape(a:name)) . " | ~/bin/magento-helper.pl --helper")
+        execute ":e " . filename[1]
+        execute "/" . filename[0]
+    endfunction
+
+    command -nargs=1 MHelper :call MHelper(<args>)
+    command -nargs=1 MBlock :call MBlock(<args>)
+    command -nargs=1 MModel :call MModel(<args>)
+
 ### magento-helper
 
 Short `config.xml` parser that lists Blocks, Helpers and Models.
