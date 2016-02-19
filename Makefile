@@ -3,9 +3,12 @@ CXXFLAGS=-std=c++11 -O3 -mtune=native
 
 .PHONY: all clean distclean
 
-all: magento-helper magento-modules magento-config xml-lister
+all: magento-helper magento-modules magento-config xml-lister block-lister
 
 magento-config: magento-config.o
+	gcc $^ -o $@ $(LIBS)
+
+block-lister: block-lister.o
 	gcc $^ -o $@ $(LIBS)
 
 xml-lister: xml-lister.o
@@ -27,9 +30,11 @@ distclean: clean
 	-rm ./magento-config
 	-rm ./magento-modules
 	-rm ./xml-lister
+	-rm ./block
 
 clean:
 	-rm magento-helpers.o
 	-rm magento-modules.o
 	-rm magento-config.o
 	-rm xml-lister.o
+	-rm block-lister.o
