@@ -1,5 +1,6 @@
 #include <expat.h>
 #include <cstring>
+#include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -14,36 +15,35 @@ struct user_data {
     std::string current;
 };
 
-struct string_view {
-    string_view(const char* d, size_t n) : d(d), s(s) {}
+template <typename I>
+I trim_front(I f, I l)
+{
+    return std::find_if_not(f, l, isspace);
+}
 
-    const char* data() { return d; }
-    size_t size() { return s; }
+template <typename I, typename P>
+I find_backward_if_not(I f, I l, P p)
+{
+    if (f == l) return l;
+    while (f != l) {
+        --l;
+        if (!isspace(*l)) break;
+    }
+    return ++l;
+}
 
-    const char* d;
-    size_t s;
-};
+template <typename I>
+I trim_back(I f, I l)
+{
+    return find_backward_if_not(f, l, isspace);
+}
 
 std::string trim(const std::string& s)
 {
-    auto p = s.begin();
-    auto l = s.end();
+    auto f = trim_front(s.begin(), s.end());
+    auto l = trim_back(f, s.end());
 
-    while (p != l) {
-        if (!isspace(*p)) break;
-        ++p;
-    }
-
-    auto p2 = p;
-    auto l2 = s.end();
-
-    while (1) {
-        if (p2 == l2) break;
-        if (!isspace(*p2)) break;
-        --l2;
-    }
-
-    return std::string{ p, l2 };
+    return std::string{f,l};
 }
 
 template <typename I>
