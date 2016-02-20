@@ -13,6 +13,8 @@ struct user_data {
     std::vector<std::string> atts;
 
     std::string current;
+    int keys_only;
+    int show_filename;
 };
 
 template <typename I>
@@ -57,14 +59,19 @@ void print_stack(I p, I l)
 }
 
 template <typename I>
-void print_atts(I f0, I l0, I f1, I l1)
+void print_atts(I f0, I l0, I f1, I l1, user_data* data)
 {
     if (f1 != l1) {
         while (f1 != l1) {
+            if (data->show_filename) {
+                std::cout << data->filename << ": ";
+            }
             print_stack(f0, l0);
             std::cout << "@" << *f1;
             ++f1;
-            std::cout << "\t" << *f1;
+            if (!data->keys_only) {
+                std::cout << "\t" << *f1;
+            }
             ++f1;
             std::cout << "\n";
         }
@@ -85,12 +92,18 @@ void root_end_element_handler(void* udata, const XML_Char* name)
 {
     user_data* data = (user_data*)udata;
 
+    if (data->show_filename) {
+        std::cout << data->filename << ": ";
+    }
+
     print_stack(data->stack.begin(), data->stack.end());
-    std::cout << "\t";
-    std::cout.write(data->current.data(), data->current.size());
+    if (!data->keys_only) {
+        std::cout << "\t";
+        std::cout.write(data->current.data(), data->current.size());
+    }
     std::cout << "\n";
 
-    print_atts(data->stack.begin(), data->stack.end(), data->atts.begin(), data->atts.end());
+    print_atts(data->stack.begin(), data->stack.end(), data->atts.begin(), data->atts.end(), data);
 
     data->stack.pop_back();
     data->atts.clear();
@@ -133,12 +146,30 @@ int main(int argc, char** argv)
     // no arguments
     if (!argc) return 0;
 
+    int keys_only = 0;
+    int show_filename = 0;
+
+    while (argv[0][0] == '-' && argv[0][1] == '-') {
+        if (strcmp(*argv, "--keys") == 0) {
+            keys_only = 1;
+            ++argv;
+            --argc;
+        }
+        if (strcmp(*argv, "--filename") == 0) {
+            show_filename = 1;
+            ++argv;
+            --argc;
+        }
+    }
+
     // create parser
     xml_parser parser;
 
     while (argc) {
         user_data data;
         data.filename = *argv;
+        data.keys_only = keys_only;
+        data.show_filename = show_filename;
 
         XML_SetUserData(parser.handle(), &data);
         XML_SetElementHandler(parser.handle(), root_start_element_handler, root_end_element_handler);
