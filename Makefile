@@ -33,7 +33,7 @@ distclean: clean
 	-rm magento-config
 	-rm magento-modules
 	-rm xml-lister
-	-rm block
+	-rm block-lister
 	-rm position
 
 clean:
