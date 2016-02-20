@@ -7,6 +7,8 @@
 #include "fs.hpp"
 #include "xml.hpp"
 
+#include <sys/stat.h>
+
 enum class State {
     ERROR,
     ROOT,
@@ -134,9 +136,13 @@ struct parse_module_config {
         name << "app/etc/modules/";
         name << f.name();
 
-        std::ifstream in{name.str()};
-        if (in) parse_xml(parser, in, &data);
-        else std::cerr << "Can't open " << name.str() << "\n";
+        struct stat stat_buf;
+        stat(name.str().c_str(), &stat_buf);
+        if (S_ISREG(stat_buf.st_mode)) {
+            std::ifstream in{name.str()};
+            if (in) parse_xml(parser, in, &data);
+            else std::cerr << "Can't open " << name.str() << "\n";
+        }
         parser.reset();
     }
 };
