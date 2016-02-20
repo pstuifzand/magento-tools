@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <MODULE_NAME>
+            <version>0.1.0</version>
+        </MODULE_NAME>
+    </modules>
+
+    <global>
+        <helpers>
+            <MODULE_NAME>
+                <class>MODULE_NAME_BLOCK</class>
+            </MODULE_NAME>
+        </helpers>
+
+        <blocks>
+            <MODULE_NAME>
+                <class>MODULE_NAME_BLOCK</class>
+            </MODULE_NAME>
+        </blocks>
+
+        <models>
+            <MODULE_NAME>
+                <class>MODULE_NAME_BLOCK</class>
+            </MODULE_NAME>
+        </models>
+    </global>
+</config>
