@@ -59,7 +59,13 @@ while (<>) {
     elsif ($find) {
         $type = $find;
         ($h, $c) = split '/';
-        ($class, $pool) = @{$helpers{$h}||[]};
+        if ($find eq 'helper') {
+            ($class, $pool) = @{$helpers{$h}||[]};
+        } elsif ($find eq 'model') {
+            ($class, $pool) = @{$models{$h}||[]};
+        } elsif ($find eq 'block') {
+            ($class, $pool) = @{$blocks{$h}||[]};
+        }
     }
     else {
         last;
