@@ -78,3 +78,8 @@ I use the following Vim function to call the script. Place the Perl program in
 
     nmap \k :call MagentoToolsFind()<cr>
 
+## Also useful
+
+* [fzf](https://github.com/junegunn/fzf)
+* [fzf.vim](https://github.com/junegunn/fzf.vim)
+
