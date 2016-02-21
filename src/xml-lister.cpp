@@ -5,7 +5,10 @@
 #include <fstream>
 #include <vector>
 #include <string>
+#include <experimental/string_view>
 #include "xml.hpp"
+
+using std::experimental::string_view;
 
 struct user_data {
     char* filename;
@@ -40,12 +43,13 @@ I trim_back(I f, I l)
     return find_backward_if_not(f, l, isspace);
 }
 
-std::string trim(const std::string& s)
+template <class S>
+S trim(const S& s)
 {
     auto f = trim_front(s.begin(), s.end());
     auto l = trim_back(f, s.end());
 
-    return std::string{f,l};
+    return S{f, (size_t)std::distance(f, l)};
 }
 
 template <typename I>
@@ -81,9 +85,9 @@ void print_atts(I f0, I l0, I f1, I l1, user_data* data)
 void root_start_element_handler(void* udata, const XML_Char* name, const XML_Char** atts)
 {
     user_data* data = (user_data*)udata;
-    data->stack.push_back(std::string(name));
+    data->stack.emplace_back(name);
     while (*atts) {
-        data->atts.push_back(std::string(*atts));
+        data->atts.emplace_back(*atts);
         ++atts;
     }
 }
@@ -113,12 +117,12 @@ void root_end_element_handler(void* udata, const XML_Char* name)
 void character_data_handler(void* udata, const XML_Char* s, int len)
 {
     user_data* data = (user_data*)udata;
-    std::string x = std::string(s,len);
+    string_view x{s, size_t(len)};
 
     auto trimmed = trim(x);
 
     if (trimmed.size()) {
-        data->current.append(trimmed);
+        data->current.append(trimmed.begin(), trimmed.end());
     }
 }
 

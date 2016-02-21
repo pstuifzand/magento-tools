@@ -1,45 +1,46 @@
 LIBS=-lstdc++ -lexpat
-CXXFLAGS=-std=c++11 -O3 -mtune=native
+CXXFLAGS=-std=c++14 -O3 -mtune=native
 
 .PHONY: all clean distclean
 
-all: magento-helper magento-modules magento-config xml-lister block-lister position
+all: bin build bin/magento-helper bin/magento-modules bin/magento-config bin/xml-lister bin/block-lister bin/position data/events.txt
 
-magento-config: magento-config.o
+bin:
+	mkdir bin
+build:
+	mkdir build
+data:
+	mkdir data
+
+bin/magento-config: build/magento-config.o
 	gcc $^ -o $@ $(LIBS)
 
-position: position.o
+bin/position: build/position.o
 	gcc $^ -o $@ $(LIBS)
 
-block-lister: block-lister.o
+bin/block-lister: build/block-lister.o
 	gcc $^ -o $@ $(LIBS)
 
-xml-lister: xml-lister.o
+bin/xml-lister: build/xml-lister.o
 	gcc $^ -o $@ $(LIBS)
 
-magento-helper: magento-helpers.o
+bin/magento-helper: build/magento-helpers.o
 	gcc $^ -o $@ $(LIBS)
 
-magento-modules: magento-modules.o
+bin/magento-modules: build/magento-modules.o
 	gcc $^ -o $@ $(LIBS)
 
-.cpp.o:
+build/%.o: src/%.cpp
 	gcc -c $< -o $@ $(CXXFLAGS)
-magento-modules.o: fs.hpp xml.hpp
-magento-config.o: fs.hpp xml.hpp
+
+data/events.txt: data script/all-events.pl
+	find /var/www/html/magento/app/code -type f -name '*.php' | xargs perl script/all-events.pl | sort > data/events.txt
+
+build/magento-modules.o: src/fs.hpp src/xml.hpp
+build/magento-config.o: src/fs.hpp src/xml.hpp
 
 distclean: clean
-	-rm magento-helper
-	-rm magento-config
-	-rm magento-modules
-	-rm xml-lister
-	-rm block-lister
-	-rm position
+	-rm -rf bin
 
 clean:
-	-rm magento-helpers.o
-	-rm magento-modules.o
-	-rm magento-config.o
-	-rm xml-lister.o
-	-rm block-lister.o
-	-rm position.o
+	-rm -rf build

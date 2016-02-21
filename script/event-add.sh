@@ -8,11 +8,11 @@ MODULEDIR=`echo -n "$1" | sed -e 's/_/\//'`
 BASE=`dirname $0`
 
 FILENAME="app/code/community/${MODULEDIR}/etc/config.xml"
-EVENT=`fzf < $BASE/events.txt`
+EVENT=`fzf < $BASE/data/events.txt`
 
 METHOD=`echo "${EVENT}" | perl -pe 'chomp;s/_([a-z])/uc($1)/gce;$_=ucfirst;'`
 
-OBSERVER=`perl $BASE/model-create.pl --simple $MODULENAME Observer`
+OBSERVER=`perl $BASE/script/model-create.pl --simple $MODULENAME Observer`
 
 xmlstarlet tr $BASE/xml/event_add.xslt \
     -s event_name="$EVENT" \
@@ -23,5 +23,5 @@ xmlstarlet tr $BASE/xml/event_add.xslt \
 
 mv ${FILENAME}.tmp $FILENAME
 
-perl $BASE/insert_method.pl event$METHOD $OBSERVER
+perl $BASE/script/insert_method.pl event$METHOD $OBSERVER
 
