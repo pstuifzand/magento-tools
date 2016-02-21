@@ -149,13 +149,29 @@ int main(int argc, char** argv) {
     argc--;
     argv++;
 
+    int names = 0;
     while (argc) {
-        parse(*argv);
+        if (strcmp(*argv, "--names") == 0) {
+            names = 1;
+        }
+        else if (argv[0][0] == '-' && argv[0][1] == '-') {
+            // unknown argument
+        }
+        else {
+            parse(*argv);
+        }
         argc--;
         argv++;
     }
 
     std::sort(std::begin(parse.data.names), std::end(parse.data.names));
+
+    if (names) {
+        for (auto& s : parse.data.names) {
+            std::cout << s << "\n";
+        }
+        exit(0);
+    }
 
     std::string s;
     while (std::getline(std::cin, s)) {
