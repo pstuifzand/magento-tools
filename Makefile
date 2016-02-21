@@ -34,7 +34,7 @@ build/%.o: src/%.cpp
 	gcc -c $< -o $@ $(CXXFLAGS)
 
 data/events.txt: data script/all-events.pl
-	find /var/www/html/magento/app/code -type f -name '*.php' | xargs perl script/all-events.pl | sort > data/events.txt
+	find /var/www/html/magento/app/code -type f -name '*.php' | xargs perl script/all-events.pl | sort | uniq > data/events.txt
 
 build/magento-modules.o: src/fs.hpp src/xml.hpp
 build/magento-config.o: src/fs.hpp src/xml.hpp
