@@ -55,6 +55,12 @@ List all modules in `app/etc/modules`.
 
 Checks getStoreConfig() calls for existence in all 'system.xml' files.
 
+### xml-lister files...
+
+List all elements and attributes from XML files.
+
+### block-lister files...
+
 ## Building
 
 Uses the `expat` library.
@@ -80,6 +86,14 @@ I use the following Vim function to call the script. Place the Perl program in
 
 ## Also useful
 
+### Fuzzy finder
+
 * [fzf](https://github.com/junegunn/fzf)
 * [fzf.vim](https://github.com/junegunn/fzf.vim)
+
+### XML
+
+* [XMLStarlet](http://xmlstar.sourceforge.net/)
+* [XMLStarlet article](http://www.freesoftwaremagazine.com/articles/xml_starlet)
+* [XSLT Identity transformation](http://www.usingxml.com/Transforms/XslIdentity)
 
