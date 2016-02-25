@@ -7,5 +7,5 @@ BASE=`dirname $0`
 
 mkdir -p app/etc/modules
 mkdir -p app/code/community/$MODULEDIR/{Helper,Block,Model,etc,sql,controllers}
-xmlstarlet tr $BASE/module_create.xslt -s ModuleName="$MODULENAME" $BASE/module_new.xml > app/etc/modules/$MODULENAME.xml
-xmlstarlet tr $BASE/config_create.xslt -s ModuleName="$MODULENAME" -s UriName="$URINAME" $BASE/config_new.xml > app/code/community/$MODULEDIR/etc/config.xml
+xmlstarlet tr $BASE/../xml/module_create.xslt -s ModuleName="$MODULENAME" $BASE/../xml/module_new.xml > app/etc/modules/$MODULENAME.xml
+xmlstarlet tr $BASE/../xml/config_create.xslt -s ModuleName="$MODULENAME" -s UriName="$URINAME" $BASE/../xml/config_new.xml > app/code/community/$MODULEDIR/etc/config.xml

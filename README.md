@@ -97,3 +97,35 @@ I use the following Vim function to call the script. Place the Perl program in
 * [XMLStarlet article](http://www.freesoftwaremagazine.com/articles/xml_starlet)
 * [XSLT Identity transformation](http://www.usingxml.com/Transforms/XslIdentity)
 
+
+
+### Bash command line functions
+
+FZF in combination with modules.sh and themes.sh will also make for quick "cd".
+
+    fmod() {
+        root=`git rev-parse --show-toplevel`
+        cd $root
+        module=`modules.sh | fzf`
+        if [[ $module && -d "app/code/$module" ]] 
+        then
+            cd app/code/$module
+        fi
+    }
+
+    ftheme() {
+        root=`git rev-parse --show-toplevel`
+        cd $root
+        theme=`themes.sh | fzf`
+        if [[ $theme && -d "app/design/frontend/$theme" ]] 
+        then
+            cd app/design/frontend/$theme
+        fi
+    }
+
+    gr() {
+        root=`git rev-parse --show-toplevel`
+        cd $root
+    }
+
+

@@ -4,7 +4,7 @@ use feature "say";
 
 use FindBin '$Bin';
 
-open my $in, '-|', "find ./app/code -name 'config.xml' | xargs $FindBin::Bin/magento-helper"
+open my $in, '-|', "find ./app/code -name 'config.xml' | xargs $FindBin::Bin/../bin/magento-helper"
     or die "Can't open input process";
 
 my %helpers;
