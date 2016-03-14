@@ -1,9 +1,12 @@
 #!/usr/bin/env perl
+use strict;
+use warnings;
 use feature "say";
-use Template;
 use FindBin '$Bin';
+use lib $Bin.'/../lib';
 use Data::Dumper;
 use Set::Scalar;
+use Tools;
 
 my $codepool = 'community';
 
@@ -14,6 +17,8 @@ my @args;
 for (@ARGV) {
     if (m/^--simple$/) {
         $tags->insert('simple');
+    } elsif (m/^--db$/) {
+        $tags->insert('db');
     } elsif (m/^--/) {
         # unknown option
     } else {
@@ -37,28 +42,28 @@ my $uri = lc($module_name) . '/' . lc($model_name);
 my @parts = (
     {
         class_name => "${module_name}_Model_${model_name}",
-        template   => $Bin.'/tt/model-model-simple.tt',
+        template   => $Bin.'/../tt/model-model-simple.tt',
         model_uri  => $uri,
         filename   => $basedir . "/${module_filename}/Model/${model_filename}.php",
         tags       => Set::Scalar->new('simple'),
     },
     {
         class_name => "${module_name}_Model_${model_name}",
-        template   => $Bin.'/tt/model-model.tt',
+        template   => $Bin.'/../tt/model-model.tt',
         model_uri  => $uri,
         filename   => $basedir . "/${module_filename}/Model/${model_filename}.php",
         tags       => Set::Scalar->new('db'),
     },
     {
         class_name => "${module_name}_Model_Resource_${model_name}",
-        template   => $Bin.'/tt/model-resource.tt',
+        template   => $Bin.'/../tt/model-resource.tt',
         model_uri  => $uri,
         filename   => $basedir . "/${module_filename}/Model/Resource/${model_filename}.php",
         tags       => Set::Scalar->new('db'),
     },
     {
         class_name => "${module_name}_Model_Resource_${model_name}_Collection",
-        template   => $Bin.'/tt/model-collection.tt',
+        template   => $Bin.'/../tt/model-collection.tt',
         model_uri  => $uri,
         filename   => $basedir . "/${module_filename}/Model/Resource/${model_filename}/Collection.php",
         tags       => Set::Scalar->new('db'),
@@ -72,7 +77,7 @@ for my $part (@parts) {
         if (!$tags->intersection($part->{tags})->is_equal($part->{tags})) {
             next;
         }
-        say $part->{filename};
+        say "Creating " . $part->{filename};
         $tt->process($part->{template}, $part, $part->{filename}) or die $tt->error;
     } else {
         say $part->{filename};

@@ -1,0 +1,7 @@
+<?php
+
+class [% class_name %] extends Mage_Core_Helper_Abstract
+{
+
+}
+

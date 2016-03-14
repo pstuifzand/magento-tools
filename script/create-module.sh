@@ -9,3 +9,4 @@ mkdir -p app/etc/modules
 mkdir -p app/code/community/$MODULEDIR/{Helper,Block,Model,etc,sql,controllers}
 xmlstarlet tr $BASE/../xml/module_create.xslt -s ModuleName="$MODULENAME" $BASE/../xml/module_new.xml > app/etc/modules/$MODULENAME.xml
 xmlstarlet tr $BASE/../xml/config_create.xslt -s ModuleName="$MODULENAME" -s UriName="$URINAME" $BASE/../xml/config_new.xml > app/code/community/$MODULEDIR/etc/config.xml
+$BASE/helper-create.pl $MODULENAME Data
