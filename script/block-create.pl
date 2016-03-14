@@ -39,6 +39,7 @@ my $uri = lc($module_name) . '/' . lc($block_name);
 my @parts = (
     {
         class_name => "${module_name}_Block_${block_name}",
+        extends_name => "Mage_Core_Block_Abstract",
         template   => $Bin.'/../tt/block-block.tt',
         block_uri  => $uri,
         filename   => $basedir . "/${module_filename}/Block/${block_filename}.php",

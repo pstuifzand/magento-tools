@@ -38,6 +38,7 @@ my $uri = lc($module_name) . '/' . lc($helper_name);
 my @parts = (
     {
         class_name => "${module_name}_Helper_${helper_name}",
+        extends_name => "Mage_Core_Helper_Abstract",
         template   => $Bin.'/../tt/helper-helper.tt',
         helper_uri  => $uri,
         filename   => $basedir . "/${module_filename}/Helper/${helper_filename}.php",
