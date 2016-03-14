@@ -61,6 +61,11 @@ List all elements and attributes from XML files.
 
 ### block-lister files...
 
+### rewrite.pl filename
+
+Let's you choose a module and rewrites the class by adding a few lines to your
+config.xml and creates a new file in the right spot.
+
 ## Building
 
 Uses the `expat` library.
