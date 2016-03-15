@@ -39,9 +39,15 @@ config.xml files.
         execute "/" . filename[0]
     endfunction
 
+    function! Rewrite()
+        let filename = systemlist("rewrite.pl " . shellescape(expand('%')))
+        execute ":e " . filename[0]
+    endfunction
+
     command -nargs=1 MHelper :call MHelper(<args>)
     command -nargs=1 MBlock :call MBlock(<args>)
     command -nargs=1 MModel :call MModel(<args>)
+    command -nargs=0 Rewrite :call Rewrite()
 
 ### magento-helper
 
