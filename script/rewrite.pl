@@ -19,11 +19,6 @@ my %blocks;
 my @class_prefix;
 my %class_info;
 
-my $find;
-if (($find) = $ARGV[0] =~ m/^--(\w+)$/) {
-    shift @ARGV;
-}
-
 while (<$in>) {
     chomp;
 
