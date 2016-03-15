@@ -43,9 +43,9 @@ my $info = Tools::parse_filename($input_filename);
 my $class_name = $info->{class_name};
 my $cinfo;
 
-if ($class_name =~ m/^Mage_Core_(Model|Block|Helper)/) {
-    $info->{uri_module} = 'core';
-    $info->{type} = $1;
+if ($class_name =~ m/^Mage_(\w+)_(Model|Block|Helper)/) {
+    $info->{uri_module} = lc $1;
+    $info->{type} = $2;
 }
 else {
     for my $prefix (@class_prefix) {
