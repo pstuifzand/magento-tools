@@ -71,10 +71,13 @@ List all elements and attributes from XML files.
 
 ### block-lister files...
 
-### rewrite.pl filename
+### rewrite.pl filename module
 
 Let's you choose a module and rewrites the class by adding a few lines to your
 config.xml and creates a new file in the right spot.
+
+Argument `module` should be in the format 'community/[Name]/[Name]'. Rewrite
+will add the new file to the module.
 
 ## Building
 
