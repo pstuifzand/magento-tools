@@ -36,7 +36,9 @@ while (<$in>) {
     $class_info{$class} = { name => $name, pool => $pool, class => $class, type => $type };
 }
 
-my $info = Tools::parse_filename($ARGV[0]);
+my $input_filename = shift @ARGV;
+my $module = shift @ARGV;
+my $info = Tools::parse_filename($input_filename);
 
 my $class_name = $info->{class_name};
 my $cinfo;
@@ -58,8 +60,6 @@ else {
 }
 
 # what is current module?
-my $module = `modules.sh | fzf`;
-chomp $module;
 
 my ($codepool, $module_dir) = split m{/}, $module, 2;
 
