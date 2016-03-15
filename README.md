@@ -39,15 +39,19 @@ config.xml files.
         execute "/" . filename[0]
     endfunction
 
-    function! Rewrite()
-        let filename = systemlist("rewrite.pl " . shellescape(expand('%')))
+    function! Rewrite(module)
+        let filename = systemlist("rewrite.pl " . shellescape(expand('%')) . " " . a:module)
         execute ":e " . filename[0]
     endfunction
 
     command -nargs=1 MHelper :call MHelper(<args>)
     command -nargs=1 MBlock :call MBlock(<args>)
     command -nargs=1 MModel :call MModel(<args>)
-    command -nargs=0 Rewrite :call Rewrite()
+    command -complete=custom,ListModules -nargs=1 Rewrite :call Rewrite("<args>")
+    fun ListModules(A,L,P)
+        return system("modules.sh")
+    endfun
+
 
 ### magento-helper
 
