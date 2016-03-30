@@ -65,53 +65,41 @@ void print_stack(I p, I l)
 template <typename I>
 void print_atts(I f0, I l0, I f1, I l1, user_data* data)
 {
-    if (f1 != l1) {
-        while (f1 != l1) {
-            if (data->show_filename) {
-                std::cout << data->filename << ": ";
-            }
-            print_stack(f0, l0);
-            std::cout << "@" << *f1;
-            ++f1;
-            if (!data->keys_only) {
-                std::cout << "\t" << *f1;
-            }
-            ++f1;
-            std::cout << "\n";
-        }
+    while (f1 != l1) {
+
+        if (data->show_filename)
+            std::cout << data->filename << ": ";
+
+        print_stack(f0, l0);
+        std::cout << "@" << *f1;
+        ++f1;
+
+        if (!data->keys_only)
+            std::cout << "\t" << *f1;
+
+        ++f1;
+        std::cout << "\n";
     }
 }
 
 void root_start_element_handler(void* udata, const XML_Char* name, const XML_Char** atts)
 {
     user_data* data = (user_data*)udata;
+
+    // print previous element
+    print_element(data);
+    data->current.clear();
+
     data->stack.emplace_back(name);
-    while (*atts) {
-        data->atts.emplace_back(*atts);
-        ++atts;
-    }
+    while (*atts) data->atts.emplace_back(*atts++);
 }
 
 void root_end_element_handler(void* udata, const XML_Char* name)
 {
     user_data* data = (user_data*)udata;
-
-    if (data->show_filename) {
-        std::cout << data->filename << ": ";
-    }
-
-    print_stack(data->stack.begin(), data->stack.end());
-    if (!data->keys_only) {
-        std::cout << "\t";
-        std::cout.write(data->current.data(), data->current.size());
-    }
-    std::cout << "\n";
-
-    print_atts(data->stack.begin(), data->stack.end(), data->atts.begin(), data->atts.end(), data);
-
-    data->stack.pop_back();
-    data->atts.clear();
+    print_element(data);
     data->current.clear();
+    data->stack.pop_back();
 }
 
 void character_data_handler(void* udata, const XML_Char* s, int len)
@@ -121,10 +109,24 @@ void character_data_handler(void* udata, const XML_Char* s, int len)
 
     auto trimmed = trim(x);
 
-    if (trimmed.size()) {
+    if (trimmed.size())
         data->current.append(trimmed.begin(), trimmed.end());
-    }
 }
+
+void print_element(user_data* data)
+{
+    if (data->show_filename) std::cout << data->filename << ": ";
+    print_stack(data->stack.begin(), data->stack.end());
+    if (!data->keys_only) {
+        std::cout << "\t";
+        std::cout.write(data->current.data(), data->current.size());
+    }
+    std::cout << "\n";
+
+    print_atts(data->stack.begin(), data->stack.end(), data->atts.begin(), data->atts.end(), data);
+    data->atts.clear();
+}
+
 
 void parse_xml(xml_parser& parser, std::ifstream& in, user_data* data) {
     const int size = 1024;
