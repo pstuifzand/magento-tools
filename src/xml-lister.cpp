@@ -82,6 +82,20 @@ void print_atts(I f0, I l0, I f1, I l1, user_data* data)
     }
 }
 
+void print_element(user_data* data)
+{
+    if (data->show_filename) std::cout << data->filename << ": ";
+    print_stack(data->stack.begin(), data->stack.end());
+    if (!data->keys_only) {
+        std::cout << "\t";
+        std::cout.write(data->current.data(), data->current.size());
+    }
+    std::cout << "\n";
+
+    print_atts(data->stack.begin(), data->stack.end(), data->atts.begin(), data->atts.end(), data);
+    data->atts.clear();
+}
+
 void root_start_element_handler(void* udata, const XML_Char* name, const XML_Char** atts)
 {
     user_data* data = (user_data*)udata;
@@ -112,21 +126,6 @@ void character_data_handler(void* udata, const XML_Char* s, int len)
     if (trimmed.size())
         data->current.append(trimmed.begin(), trimmed.end());
 }
-
-void print_element(user_data* data)
-{
-    if (data->show_filename) std::cout << data->filename << ": ";
-    print_stack(data->stack.begin(), data->stack.end());
-    if (!data->keys_only) {
-        std::cout << "\t";
-        std::cout.write(data->current.data(), data->current.size());
-    }
-    std::cout << "\n";
-
-    print_atts(data->stack.begin(), data->stack.end(), data->atts.begin(), data->atts.end(), data);
-    data->atts.clear();
-}
-
 
 void parse_xml(xml_parser& parser, std::ifstream& in, user_data* data) {
     const int size = 1024;
