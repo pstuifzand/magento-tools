@@ -30,8 +30,7 @@ template <typename I, typename P>
 I find_backward_if_not(I f, I l, P p)
 {
     if (f == l) return l;
-    while (f != l) {
-        --l;
+    while (f != --l) {
         if (!p(*l)) break;
     }
     return ++l;
@@ -87,8 +86,7 @@ void print_element(user_data* data)
     if (data->show_filename) std::cout << data->filename << ": ";
     print_stack(data->stack.begin(), data->stack.end());
     if (!data->keys_only) {
-        std::cout << "\t";
-        std::cout.write(data->current.data(), data->current.size());
+        std::cout << "\t" << data->current;
     }
     std::cout << "\n";
 
