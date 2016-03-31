@@ -32,7 +32,7 @@ I find_backward_if_not(I f, I l, P p)
     if (f == l) return l;
     while (f != l) {
         --l;
-        if (!isspace(*l)) break;
+        if (!p(*l)) break;
     }
     return ++l;
 }
