@@ -4,8 +4,12 @@ use feature "say";
 
 use FindBin '$Bin';
 
-open my $in, '-|', "find ./app/code -name 'config.xml' | xargs $FindBin::Bin/../bin/magento-helper"
-    or die "Can't open input process";
+my $root = `git rev-parse --show-toplevel`;
+chomp $root;
+
+my $command = "find $root/app/code -name 'config.xml' | xargs $FindBin::Bin/../bin/magento-helper";
+
+open my $in, '-|', $command or die "Can't open input process";
 
 my %helpers;
 my %models;
@@ -18,6 +22,7 @@ if (($find) = $ARGV[0] =~ m/^--(\w+)$/) {
 
 while (<$in>) {
     chomp;
+
     my ($type, $name, $class, $pool) = m/^(\w+): \s+ (\w+) \s+ => \s+ (\w+) \s+ \((community|core|local)\)$/x;
 
     if ($type eq 'Helper') {
@@ -88,5 +93,5 @@ while (<>) {
     }
 
     $helper_class =~ s{_}{/}g;
-    say 'app/code/'.$pool.'/' . $helper_class . '.php';
+    say "$root/app/code/$pool/${helper_class}.php";
 }
