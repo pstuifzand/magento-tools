@@ -2,8 +2,10 @@
 use strict;
 use feature "say";
 
-use FindBin '$Bin';
-use lib $Bin.'/../lib';
+BEGIN {
+    use FindBin '$Bin';
+    use lib $FindBin::Bin.'/../lib';
+}
 use Tools;
 
 my $root = Tools::git_root();
@@ -51,7 +53,7 @@ while (<>) {
         ($h, $c) = split '/', $uri;
         ($class, $pool) = @{$blocks{$h}||[]};
     }
-    elsif (m{<block\s+} && do { (undef, $uri) = m{type=(["'])([^"']+)\1}}) {
+    elsif (m{<block\s+} && do { (undef, $uri) = m{type=(["'])([^"']+)$1}}) {
         $type = 'block';
         ($h, $c) = split '/', $uri;
         ($class, $pool) = @{$blocks{$h}||[]};
