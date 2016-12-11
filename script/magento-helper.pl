@@ -3,9 +3,10 @@ use strict;
 use feature "say";
 
 use FindBin '$Bin';
+use lib $Bin.'/../lib';
+use Tools;
 
-my $root = `git rev-parse --show-toplevel`;
-chomp $root;
+my $root = Tools::git_root();
 
 my $command = "find $root/app/code -name 'config.xml' | xargs $FindBin::Bin/../bin/magento-helper";
 

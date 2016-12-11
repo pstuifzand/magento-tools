@@ -58,5 +58,11 @@ sub parse_filename {
     return \%info;
 }
 
+sub git_root {
+    my $root = `git rev-parse --show-toplevel`;
+    chomp $root;
+    return $root;
+}
+
 1;
 
