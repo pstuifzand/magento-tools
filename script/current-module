@@ -6,12 +6,13 @@ use lib $Bin.'/../lib';
 use Tools;
 
 my $path = Tools::git_root();
+my $dir = $ENV{PWD};
+$dir =~ s{^$path/}{};
 
-my ($appcode, $codepool, $namespace, $module) = $path =~ m{^(app/code)/(core|community|local)/(\w+)/(\w+)};
+my ($appcode, $codepool, $namespace, $module) = $dir =~ m{^(app/code)/(core|community|local)/(\w+)/(\w+)};
 
 if (!$appcode || $appcode ne 'app/code') {
     die "not in app/code";
 }
 
 say "${namespace}_${module}";
-say $codepool;
