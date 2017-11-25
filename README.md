@@ -71,6 +71,16 @@ List all elements and attributes from XML files.
 
 ### block-lister files...
 
+List all blocks from the layout XML files.
+
+### current-version.sh [module]
+
+Show the current version of the current module
+
+### next-version.sh [module]
+
+Show the next version of the current module
+
 ### rewrite.pl filename module
 
 Let's you choose a module and rewrites the class by adding a few lines to your
